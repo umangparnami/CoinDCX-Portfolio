@@ -61,7 +61,6 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
