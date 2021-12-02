@@ -22,14 +22,17 @@
         <entry key="app/src/main/res/drawable/wallet.xml" value="0.3074074074074074" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.33" />
         <entry key="app/src/main/res/layout/activity_splash.xml" value="0.2824074074074074" />
+        <entry key="app/src/main/res/layout/error_layout.xml" value="0.3302083333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_portfolio.xml" value="0.33" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.5" />
         <entry key="app/src/main/res/layout/item_layout.xml" value="0.5" />
+        <entry key="app/src/main/res/layout/loading_dialog.xml" value="0.67" />
         <entry key="app/src/main/res/layout/popup_layout.xml" value="0.2824074074074074" />
         <entry key="app/src/main/res/layout/portfolio_item_layout.xml" value="0.5" />
         <entry key="app/src/main/res/layout/portfolio_layout.xml" value="0.2824074074074074" />
         <entry key="app/src/main/res/layout/price_edit_popup.xml" value="0.33" />
+        <entry key="app/src/main/res/layout/ticker_item_layout.xml" value="0.2518518518518518" />
         <entry key="app/src/main/res/menu/top_menu.xml" value="0.31614583333333335" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.29907407407407405" />
         <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher_round.xml" value="0.29907407407407405" />

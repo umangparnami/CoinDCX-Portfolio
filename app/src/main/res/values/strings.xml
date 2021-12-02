@@ -18,7 +18,9 @@
     <string name="secret_key_hint">Secret Key</string>
     <string name="done_text">Done</string>
     <string name="search">search by name</string>
+    <string name="loading">Loading...</string>
     <string name="settings_text">Enter or Update API Key and Secret Key</string>
+    <string name="error_text">Set or fix API and Secret Keys on settings tab to view Portfolio</string>
     <string name="img_desc">Crypto Symbol</string>
     <string name="buy_price">Buy Price</string>
     <string name="buy_total">Total Buy</string>

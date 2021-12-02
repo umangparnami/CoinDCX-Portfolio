@@ -7,6 +7,17 @@
     tools:context=".Fragments.PortfolioFragment"
     android:paddingHorizontal="10dp">
 
+    <TextView
+        android:id="@+id/error_text"
+        android:visibility="gone"
+        android:text="@string/error_text"
+        android:fontFamily="@font/urbanist_semibold"
+        android:textSize="24sp"
+        android:textAlignment="center"
+        android:layout_centerVertical="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
 
         <androidx.cardview.widget.CardView
             android:id="@+id/portfolio_total_layout"

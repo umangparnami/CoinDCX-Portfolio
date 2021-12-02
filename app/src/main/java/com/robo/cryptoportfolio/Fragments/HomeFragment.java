@@ -1,7 +1,7 @@
 package com.robo.cryptoportfolio.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -48,6 +48,7 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
     private TickerAdapter adapter;
     private EditText search;
     private boolean sortByUp = true;
+    private AlertDialog dialog;
 
 
     public HomeFragment() {
@@ -71,6 +72,11 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
         cryptoChipGroup = view.findViewById(R.id.crypto_chip_group);
         pairsCount = view.findViewById(R.id.pairs_count);
         sortBtn = view.findViewById(R.id.sort_btn);
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setView(R.layout.loading_dialog);
+        dialog = builder.create();
+
         return view;
     }
 
@@ -132,10 +138,6 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
         Call<List<Ticker>> call = retrofitAPI.getAllTickers();
 
-
-        ProgressDialog dialog = new ProgressDialog(view.getContext());
-        dialog.setMessage("Loading...");
-        dialog.setCancelable(false);
         dialog.show();
 
         search.setText(null);
@@ -145,7 +147,6 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
             @Override
             public void onResponse(Call<List<Ticker>> call, Response<List<Ticker>> response)
             {
-                dialog.dismiss();
                 tickerList = response.body();
                 MainActivity.getActivity().setTicker(tickerList);
 
@@ -154,6 +155,8 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
                 adapter = new TickerAdapter(view.getContext(), allTickersFiltered, marketChoice);
                 recyclerView.setAdapter(adapter);
                 pairsCount.setText(String.format(Locale.US, "Pairs Fetched: %d", adapter.getItemCount()));
+
+                dialog.dismiss();
             }
 
             @Override

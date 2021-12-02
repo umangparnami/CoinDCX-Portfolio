@@ -57,7 +57,6 @@ public class TickerAdapter extends RecyclerView.Adapter<TickerViewHolder> implem
         holder.cryptoMarket.setText(ticker.getMarket());
 
         String url = String.format("https://cdn.coindcx.com/static/coins/%s.svg",ticker.getMarket().split(marketChoice)[0].toLowerCase());
-
         setCryptoImage(url,holder.cryptoSymbol);
 
 
@@ -151,7 +150,6 @@ public class TickerAdapter extends RecyclerView.Adapter<TickerViewHolder> implem
         protected void publishResults(CharSequence constraint, FilterResults results) {
             tickerList.clear();
             tickerList.addAll((List) results.values);
-            System.out.println("Ticker Size "+getItemCount());
             notifyDataSetChanged();
         }
     };

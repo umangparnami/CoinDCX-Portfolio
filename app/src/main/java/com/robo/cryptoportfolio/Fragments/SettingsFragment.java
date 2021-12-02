@@ -1,6 +1,6 @@
 package com.robo.cryptoportfolio.Fragments;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -17,11 +17,11 @@ import androidx.fragment.app.Fragment;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
+import com.robo.cryptoportfolio.HelperClasses.SignatureGenerator;
 import com.robo.cryptoportfolio.Objects.UserInfo;
 import com.robo.cryptoportfolio.R;
 import com.robo.cryptoportfolio.Retrofit.RetrofitAPI;
 import com.robo.cryptoportfolio.Retrofit.RetrofitClient;
-import com.robo.cryptoportfolio.HelperClasses.SignatureGenerator;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -37,6 +37,7 @@ public class SettingsFragment extends Fragment {
     private Button doneBtn;
     private String api, secret;
     private TextView name,mobile,email;
+    private AlertDialog dialog;
 
     public SettingsFragment()
     {
@@ -63,6 +64,12 @@ public class SettingsFragment extends Fragment {
         mobile = view.findViewById(R.id.mobile);
         email = view.findViewById(R.id.email);
         preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.shared_pref), Context.MODE_PRIVATE);
+
+        AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setView(R.layout.loading_dialog);
+        dialog = builder.create();
+
         return view;
     }
 
@@ -125,9 +132,6 @@ public class SettingsFragment extends Fragment {
 
     private void getUserDetails()
     {
-        ProgressDialog dialog = new ProgressDialog(view.getContext());
-        dialog.setMessage("Loading...");
-        dialog.setCancelable(false);
         dialog.show();
 
         SignatureGenerator obj = new SignatureGenerator();
@@ -158,7 +162,7 @@ public class SettingsFragment extends Fragment {
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 dialog.dismiss();
                 Log.i("Failure",t.getMessage());
-                Snackbar.make(view,"Error occurred.",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view,"Something went wrong",Snackbar.LENGTH_SHORT).show();
             }
         });
     }

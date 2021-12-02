@@ -1,6 +1,6 @@
 package com.robo.cryptoportfolio.Fragments;
 
-import android.app.ProgressDialog;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
@@ -52,8 +52,10 @@ public class PortfolioFragment extends Fragment
     PortfolioAdapter adapter;
     float portfolioSum = 0, buySum=0;
     
-    TextView allBuyTotal,portfolioTotal,totalChange;
+    TextView allBuyTotal,portfolioTotal,totalChange,errorText;
     CardView portfolioTotalLayout;
+
+    private AlertDialog dialog;
 
 
     public PortfolioFragment()
@@ -81,6 +83,12 @@ public class PortfolioFragment extends Fragment
         totalChange = view.findViewById(R.id.total_change);
         portfolioTotalLayout = view.findViewById(R.id.portfolio_total_layout);
         portfolioTotalLayout.setVisibility(View.GONE);
+        errorText = view.findViewById(R.id.error_text);
+
+        AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
+        builder.setCancelable(false);
+        builder.setView(R.layout.loading_dialog);
+        dialog = builder.create();
         return view;
     }
 
@@ -97,10 +105,11 @@ public class PortfolioFragment extends Fragment
     {
         if(preferences.getString(getResources().getString(R.string.api_key),null) == null)
         {
-            Snackbar.make(view,"Set API and Secret Key on settings tab.", Snackbar.LENGTH_LONG).show();
+            errorText.setVisibility(View.VISIBLE);
         }
         else
         {
+            errorText.setVisibility(View.GONE);
             api = preferences.getString(getResources().getString(R.string.api_key),null);
             secret = preferences.getString(getResources().getString(R.string.secret_key),null);
             requestData();
@@ -114,9 +123,6 @@ public class PortfolioFragment extends Fragment
         Retrofit retrofit = new RetrofitClient().getInstance();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        ProgressDialog dialog = new ProgressDialog(view.getContext());
-        dialog.setMessage("Loading...");
-        dialog.setCancelable(false);
         dialog.show();
 
         Call<List<MarketDetails>> marketCall = retrofitAPI.getMarketDetails();
@@ -144,15 +150,12 @@ public class PortfolioFragment extends Fragment
                 dialog.dismiss();
                 if(response.body() == null)
                 {
-                    Snackbar.make(view,"API or Secret Key incorrect.",Snackbar.LENGTH_SHORT)
-                            .setAction("Fix it", new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
-                                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.frame_layout,new SettingsFragment()).commit();
-                                }
-                            }).show();
+                    errorText.setVisibility(View.VISIBLE);
+                    Snackbar.make(view,"API or Secret Key incorrect.",Snackbar.LENGTH_SHORT).show();
                     return;
                 }
+
+                errorText.setVisibility(View.GONE);
                 portfolioTotalLayout.setVisibility(View.VISIBLE);
                 List<Balance> availableBalances = response.body().stream().filter(balance -> Float.parseFloat(balance.getTotalBalance())>0)
                         .collect(Collectors.toList());
