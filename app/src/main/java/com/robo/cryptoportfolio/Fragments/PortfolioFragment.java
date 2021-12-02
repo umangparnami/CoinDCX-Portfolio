@@ -29,8 +29,6 @@ import com.robo.cryptoportfolio.RecyclerViews.PortfolioAdapter;
 import com.robo.cryptoportfolio.Retrofit.RetrofitAPI;
 import com.robo.cryptoportfolio.Retrofit.RetrofitClient;
 
-import org.jetbrains.annotations.NotNull;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -39,6 +37,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.internal.EverythingIsNonNull;
 
 
 public class PortfolioFragment extends Fragment
@@ -128,11 +127,13 @@ public class PortfolioFragment extends Fragment
         Call<List<MarketDetails>> marketCall = retrofitAPI.getMarketDetails();
         marketCall.enqueue(new Callback<List<MarketDetails>>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<List<MarketDetails>> call, Response<List<MarketDetails>> response) {
                 MainActivity.getActivity().setMarketDetails(response.body());
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<List<MarketDetails>> call, Throwable t) {
 
             }
@@ -145,7 +146,8 @@ public class PortfolioFragment extends Fragment
 
         call.enqueue(new Callback<List<Balance>>() {
             @Override
-            public void onResponse(@NotNull Call<List<Balance>> call, @NotNull retrofit2.Response<List<Balance>> response)
+            @EverythingIsNonNull
+            public void onResponse(Call<List<Balance>> call, retrofit2.Response<List<Balance>> response)
             {
                 dialog.dismiss();
                 if(response.body() == null)
@@ -164,27 +166,25 @@ public class PortfolioFragment extends Fragment
                 adapter = new PortfolioAdapter(view.getContext(),balanceInInr);
                 portfolioRecycler.setAdapter(adapter);
 
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.crypto_shared_pref), Context.MODE_PRIVATE);
-                        for (Balance balance:balanceInInr)
+                new Thread(() -> {
+                    preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.crypto_shared_pref), Context.MODE_PRIVATE);
+                    for (Balance balance:balanceInInr)
+                    {
+                        String price = preferences.getString(String.format("%s_buy_price",balance.getCurrency()),null);
+                        if(price != null)
                         {
-                            String price = preferences.getString(String.format("%s_buy_price",balance.getCurrency()),null);
-                            if(price != null)
-                            {
-                                buySum+=Float.parseFloat(price);
-                            }
-                            float inr = Float.parseFloat(balance.getInrValue());
-                            portfolioSum+=inr;
+                            buySum+=Float.parseFloat(price);
                         }
-                        setPortfolioValues(buySum,portfolioSum);
+                        float inr = Float.parseFloat(balance.getInrValue());
+                        portfolioSum+=inr;
                     }
+                    setPortfolioValues(buySum,portfolioSum);
                 }).start();
             }
 
             @Override
-            public void onFailure(@NotNull Call<List<Balance>> call, @NotNull Throwable t) {
+            @EverythingIsNonNull
+            public void onFailure(Call<List<Balance>> call, Throwable t) {
                 dialog.dismiss();
                 Log.i("Response","Failure");
             }
@@ -204,15 +204,15 @@ public class PortfolioFragment extends Fragment
             {
                 totalChange.setText(String.format(Locale.US,"%.2f%%", change));
                 totalChange.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_downward,0,0,0);
-                totalChange.setTextColor(getResources().getColor(R.color.red));
-                totalChange.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.red_10)));
+                totalChange.setTextColor(view.getContext().getColor(R.color.red));
+                totalChange.setBackgroundTintList(ColorStateList.valueOf(view.getContext().getColor(R.color.red_10)));
             }
             else if(change>0)
             {
                 totalChange.setText(String.format(Locale.US,"+%.2f%%", change));
                 totalChange.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_upward,0,0,0);
-                totalChange.setTextColor(getResources().getColor(R.color.green));
-                totalChange.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.green_10)));
+                totalChange.setTextColor(view.getContext().getColor(R.color.green));
+                totalChange.setBackgroundTintList(ColorStateList.valueOf(view.getContext().getColor(R.color.green_10)));
             }
         }
         else
@@ -221,8 +221,8 @@ public class PortfolioFragment extends Fragment
             portfolioTotal.setText(String.format(Locale.US,"%s%.2f",getResources().getString(R.string.inr_symbol),portfolio));
             totalChange.setText("-");
             totalChange.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_nochange,0,0,0);
-            totalChange.setTextColor(getResources().getColor(R.color.blue));
-            totalChange.setBackgroundTintList(ColorStateList.valueOf(getResources().getColor(R.color.blue_20)));
+            totalChange.setTextColor(view.getContext().getColor(R.color.blue));
+            totalChange.setBackgroundTintList(ColorStateList.valueOf(view.getContext().getColor(R.color.blue_20)));
         }
     }
 

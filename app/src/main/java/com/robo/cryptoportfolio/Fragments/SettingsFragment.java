@@ -27,6 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
+import retrofit2.internal.EverythingIsNonNull;
 
 
 public class SettingsFragment extends Fragment {
@@ -141,6 +142,7 @@ public class SettingsFragment extends Fragment {
 
         call.enqueue(new Callback<UserInfo>() {
             @Override
+            @EverythingIsNonNull
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response)
             {
                 dialog.dismiss();
@@ -159,6 +161,7 @@ public class SettingsFragment extends Fragment {
             }
 
             @Override
+            @EverythingIsNonNull
             public void onFailure(Call<UserInfo> call, Throwable t) {
                 dialog.dismiss();
                 Log.i("Failure",t.getMessage());

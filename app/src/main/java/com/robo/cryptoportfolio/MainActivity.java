@@ -1,8 +1,5 @@
 package com.robo.cryptoportfolio;
 
-import android.net.ConnectivityManager;
-import android.net.Network;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +24,6 @@ public class MainActivity extends AppCompatActivity
     private List<MarketDetails> marketDetails;
     private static MainActivity activity = null;
     private Fragment fragment;
-    private boolean networkAvailable;
 
 
     @Override
@@ -44,7 +40,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     protected void onStart() {
         super.onStart();
-        bottomNav.setOnNavigationItemSelectedListener(item -> {
+        bottomNav.setOnItemSelectedListener(item -> {
             if(item.getItemId() == R.id.home)
             {
                 fragment = new HomeFragment();
@@ -60,15 +56,6 @@ public class MainActivity extends AppCompatActivity
             manager.beginTransaction().replace(R.id.frame_layout,fragment).commit();
             return true;
         });
-    }
-
-    private boolean isNetworkAvailable()
-    {
-        ConnectivityManager connectivityManager = getSystemService(ConnectivityManager.class);
-        Network network = connectivityManager.getActiveNetwork();
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        networkAvailable = activeNetworkInfo != null && activeNetworkInfo.isConnected();
-        return networkAvailable;
     }
 
     public static MainActivity getActivity()
