@@ -56,7 +56,6 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
         String url = String.format("https://cdn.coindcx.com/static/coins/%s.svg",balance.getCurrency().toLowerCase());
         setCryptoImage(url,holder.symbol);
 
-        // TODO: 01/12/21 Add link to API docs on settings fragment
 
         holder.name.setText(balance.getCurrencyName());
         holder.quantity.setText(String.format(Locale.US,"Qty: %s",getFormattedString(balance.getTotalBalance())));
@@ -157,7 +156,6 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
             }
         });
     }
-// TODO: 01/12/21 Use market details endpoint to fetch names
 
     private String getFormattedString(String s)
     {

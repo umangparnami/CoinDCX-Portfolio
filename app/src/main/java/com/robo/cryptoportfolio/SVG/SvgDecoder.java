@@ -17,7 +17,7 @@ public class SvgDecoder implements ResourceDecoder<InputStream, SVG> {
 
     @Override
     public boolean handles(@NonNull InputStream source, @NonNull Options options) {
-        // TODO: Can we tell?
+
         return true;
     }
 

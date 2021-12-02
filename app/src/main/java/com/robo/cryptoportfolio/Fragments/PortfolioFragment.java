@@ -226,6 +226,4 @@ public class PortfolioFragment extends Fragment
         }
     }
 
-    //TODO: Use shared preference to save api and secret key with encoding.
-   
 }

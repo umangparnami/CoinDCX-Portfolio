@@ -132,6 +132,15 @@
                     android:fontFamily="@font/urbanist_bold"
                     android:minHeight="60dp"
                     android:text="@string/done_text" />
+
+                <TextView
+                    android:layout_marginBottom="8dp"
+                    android:autoLink="all"
+                    android:textSize="12sp"
+                    android:textColorLink="@color/orange"
+                    android:text="@string/link_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </androidx.cardview.widget.CardView>
 
