@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".Fragments.HomeFragment"
+    android:background="@color/bg_color">
+
+        <EditText
+            android:id="@+id/search_field"
+            android:layout_alignParentStart="true"
+            android:padding="15dp"
+            android:fontFamily="@font/urbanist_regular"
+            android:textSize="16sp"
+            android:background="@drawable/round_edittext"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginVertical="20dp"
+            android:layout_marginHorizontal="10dp"
+            android:drawableEnd="@drawable/search"
+            android:hint="@string/search"
+            android:imeOptions="actionDone"
+            android:importantForAutofill="no"
+            android:inputType="text" />
+
+        <TextView
+            android:id="@+id/top_text"
+            android:layout_below="@id/search_field"
+            android:layout_gravity="center_vertical"
+            android:gravity="center_vertical"
+            android:layout_marginHorizontal="10dp"
+            android:text="@string/top_text"
+            android:textSize="14sp"
+            android:fontFamily="@font/urbanist_medium"
+            android:textStyle="bold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <com.google.android.material.chip.ChipGroup
+            android:id="@+id/crypto_chip_group"
+            android:layout_marginHorizontal="10dp"
+            android:layout_below="@id/top_text"
+            app:chipSpacingHorizontal="10dp"
+            android:layout_marginBottom="10dp"
+            app:singleSelection="true"
+            app:selectionRequired="true"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/usdt_chip"
+                android:text="@string/usdt_ticker"
+                android:checkable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/btc_chip"
+                android:text="@string/btc_ticker"
+                android:checkable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+            <com.google.android.material.chip.Chip
+                android:id="@+id/inr_chip"
+                android:text="@string/inr_ticker"
+                android:checkable="true"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"/>
+
+        </com.google.android.material.chip.ChipGroup>
+
+        <RelativeLayout
+            android:layout_below="@id/crypto_chip_group"
+            android:background="@drawable/top_round_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <RelativeLayout
+                android:id="@+id/pairs_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="15dp">
+
+                <TextView
+                    android:id="@+id/pairs_count"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    tools:text="Pairs fetched: 120" />
+
+                <TextView
+                    android:text="@string/sort_text"
+                    android:layout_centerVertical="true"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_toStartOf="@id/sort_btn"
+                    android:alpha="0.6"
+                    android:fontFamily="@font/urbanist_medium"
+                    android:textSize="12sp" />
+
+                <TextView
+                    android:id="@+id/sort_btn"
+                    android:text="@string/UP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginEnd="6dp"
+                    android:alpha="0.9"
+                    android:background="@drawable/sort_bounds"
+                    android:paddingHorizontal="10dp"
+                    android:paddingVertical="8dp"
+                    app:drawableLeftCompat="@drawable/arrow_upward" />
+
+            </RelativeLayout>
+
+            <View
+                android:id="@+id/home_divider"
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/pairs_layout"
+                android:layout_marginHorizontal="10dp"
+                android:alpha="0.1"
+                android:background="@color/text_color" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@id/home_divider"
+                tools:listitem="@layout/ticker_item_layout" />
+        </RelativeLayout>
+
+</RelativeLayout>

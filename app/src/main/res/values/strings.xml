@@ -1,0 +1,36 @@
+<resources>
+    <string name="app_name">CoinDCX Portfolio</string>
+    <string name="top_text">Filter by:</string>
+    <string name="usdt_ticker">USDT</string>
+    <string name="btc_ticker">BTC</string>
+    <string name="inr_ticker">INR</string>
+    <string name="usd_symbol">\u0024</string>
+    <string name="btc_symbol">\u20BF</string>
+    <string name="inr_symbol">\u20B9</string>
+    <string name="home">home</string>
+    <string name="portfolio">portfolio</string>
+    <string name="settings">settings</string>
+    <string name="shared_pref">SharedPrefKey</string>
+    <string name="crypto_shared_pref">CryptoPref</string>
+    <string name="api_key">API_KEY</string>
+    <string name="secret_key">SECRET_KEY</string>
+    <string name="api_key_hint">API Key</string>
+    <string name="secret_key_hint">Secret Key</string>
+    <string name="done_text">Done</string>
+    <string name="search">search by name</string>
+    <string name="settings_text">Enter or Update API Key and Secret Key</string>
+    <string name="img_desc">Crypto Symbol</string>
+    <string name="buy_price">Buy Price</string>
+    <string name="buy_total">Total Buy</string>
+    <string name="current_total">Current Total</string>
+    <string name="portfolio_total">Portfolio Total</string>
+    <string name="buy_value">Buy Value</string>
+    <string name="edit">Edit Total Buy</string>
+    <string name="sort_text">Sort by change</string>
+    <string name="UP">UP</string>
+    <string name="DN">DN</string>
+    <string name="no_change">0.00%</string>
+    <string name="name">Name</string>
+    <string name="email">Email</string>
+    <string name="mobile">Mobile No.</string>
+</resources>

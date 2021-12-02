@@ -1,0 +1,72 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.CryptoPortfolio" parent="Theme.MaterialComponents.DayNight.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryVariant">@color/blue</item>
+        <item name="colorOnPrimary">@color/text_color_60</item>
+        <!-- Secondary brand color. -->
+        <item name="colorSecondary">@color/blue_dark</item>
+        <item name="colorSecondaryVariant">@color/blue</item>
+        <item name="colorOnSecondary">@color/white</item>
+        <!-- Status bar color. -->
+        <item name="android:statusBarColor" tools:targetApi="l">@color/bg_color</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <!-- Customize your theme here. -->
+        <item name="android:forceDarkAllowed" tools:targetApi="Q">false</item>
+        <item name="android:textViewStyle">@style/MyTextViewStyle</item>
+        <item name="chipStyle">@style/MyChipStyle</item>
+    </style>
+
+
+    <style name="MyTextViewStyle" parent="Widget.MaterialComponents.TextView">
+        <item name="android:textColor">@color/text_color</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:fontFamily">@font/urbanist_semibold</item>
+    </style>
+
+    <style name="BottomNavStyle" parent="Widget.MaterialComponents.BottomNavigationView">
+        <item name="itemIconTint">@color/bottom_menu_icon_colors</item>
+        <item name="itemTextColor">@color/bottom_menu_text_colors</item>
+        <item name="itemTextAppearanceActive">@style/BottomNavTextStyle</item>
+        <item name="itemTextAppearanceInactive">@style/BottomNavTextStyle</item>
+    </style>
+
+    <style name="BottomNavTextStyle">
+        <item name="android:fontFamily">@font/urbanist_semibold</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="MyChipStyle" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="chipCornerRadius">10dp</item>
+        <item name="chipStrokeWidth">1dp</item>
+        <item name="android:fontFamily">@font/urbanist_semibold</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/chip_text_color</item>
+        <item name="android:backgroundTint">@color/chip_bg_color</item>
+        <item name="chipStrokeColor">@color/chip_stroke_color</item>
+    </style>
+
+    <style name="MyButtonStyle" parent="Widget.AppCompat.Button">
+        <item name="android:fontFamily">@font/urbanist_semibold</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textAllCaps">false</item>
+        <item name="android:minHeight">15dp</item>
+        <item name="android:textColor">@color/orange</item>
+        <item name="android:background">@drawable/round_button</item>
+    </style>
+
+    <style name="TextInputLayoutStyle" parent="Widget.MaterialComponents.TextInputLayout.FilledBox">
+        <item name="hintAnimationEnabled">true</item>
+        <item name="errorEnabled">true</item>
+        <item name="passwordToggleEnabled">true</item>
+        <item name="passwordToggleDrawable">@drawable/pwd_toggle</item>
+        <item name="passwordToggleTint">@color/blue</item>
+        <item name="boxBackgroundColor">@null</item>
+        <item name="boxStrokeColor">@color/text_color_10</item>
+        <item name="boxStrokeWidth">0.5dp</item>
+    </style>
+
+
+</resources>

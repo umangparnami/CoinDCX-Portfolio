@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:layout_margin="10dp">
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/symbol"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="10dp"
+            android:layerType="software"
+            android:minWidth="50dp"
+            android:minHeight="50dp"
+            tools:src="@drawable/settings" />
+
+    <LinearLayout
+        android:layout_centerVertical="true"
+        android:orientation="vertical"
+        android:layout_toEndOf="@id/symbol"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+    <TextView
+        android:id="@+id/crypto_market"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textStyle="bold"
+        tools:text="Title" />
+
+    <TextView
+        android:id="@+id/crypto_price"
+        tools:text="123"
+        android:layout_marginTop="6dp"
+        android:alpha="0.6"
+        android:textColor="@color/text_color"
+        android:fontFamily="@font/urbanist_medium"
+        android:textSize="14sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+
+        <TextView
+            android:id="@+id/price_change"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/clip_bounds_textview"
+            android:fontFamily="@font/urbanist_semibold"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            tools:backgroundTint="@color/blue_20"
+            tools:drawableLeft="@drawable/arrow_nochange"
+            tools:text="0.0%"
+            tools:textColor="@color/blue" />
+    </RelativeLayout>
+
+
+</LinearLayout>
