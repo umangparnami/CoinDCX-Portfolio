@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,7 +38,7 @@ public class SettingsFragment extends Fragment {
     private TextInputLayout apiLayout,secretLayout;
     private Button doneBtn;
     private String api, secret;
-    private TextView name,mobile,email;
+    private TextView name,mobile,email,linkText;
     private AlertDialog dialog;
 
     public SettingsFragment()
@@ -64,6 +65,8 @@ public class SettingsFragment extends Fragment {
         name = view.findViewById(R.id.name);
         mobile = view.findViewById(R.id.mobile);
         email = view.findViewById(R.id.email);
+        linkText = view.findViewById(R.id.link_text);
+        linkText.setMovementMethod(LinkMovementMethod.getInstance());
         preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.shared_pref), Context.MODE_PRIVATE);
 
         AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
