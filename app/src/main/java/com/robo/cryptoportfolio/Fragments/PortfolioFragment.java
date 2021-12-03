@@ -149,7 +149,6 @@ public class PortfolioFragment extends Fragment
             @EverythingIsNonNull
             public void onResponse(Call<List<Balance>> call, retrofit2.Response<List<Balance>> response)
             {
-                dialog.dismiss();
                 if(response.body() == null)
                 {
                     errorText.setVisibility(View.VISIBLE);
@@ -171,7 +170,7 @@ public class PortfolioFragment extends Fragment
                     for (Balance balance:balanceInInr)
                     {
                         String price = preferences.getString(String.format("%s_buy_price",balance.getCurrency()),null);
-                        if(price != null)
+                        if(price != null && !price.isEmpty())
                         {
                             buySum+=Float.parseFloat(price);
                         }
@@ -180,6 +179,8 @@ public class PortfolioFragment extends Fragment
                     }
                     setPortfolioValues(buySum,portfolioSum);
                 }).start();
+
+                dialog.dismiss();
             }
 
             @Override

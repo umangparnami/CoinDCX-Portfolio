@@ -4,7 +4,9 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.PorterDuff;
+import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.PictureDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,11 +19,12 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.RequestBuilder;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.textfield.TextInputLayout;
 import com.robo.cryptoportfolio.Objects.Balance;
 import com.robo.cryptoportfolio.R;
+import com.robo.cryptoportfolio.SVG.GlideApp;
 
 import java.text.DecimalFormat;
 import java.util.List;
@@ -64,7 +67,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
 
         String price = preferences.getString(String.format("%s_buy_price",balance.getCurrency()),null);
 
-        if(price !=null)
+        if(price != null && !price.isEmpty())
         {
             //Calculating buy price and percentage change
             float buyTotal = Float.parseFloat(price);
@@ -104,18 +107,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
                 holder.change.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_nochange,0,0,0);
             }
 
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                holder.editBtn.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v)
-                    {
-                        createAlert(balance);
-                    }
-                });
-            }
-        }).start();
+        new Thread(() -> holder.editBtn.setOnClickListener(v -> createAlert(balance))).start();
 
     }
 
@@ -130,6 +122,7 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
         View price_popup = LayoutInflater.from(context).inflate(R.layout.price_edit_popup,null,false);
         AlertDialog dialog = new AlertDialog.Builder(context).create();
         dialog.setCancelable(true);
+        dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setView(price_popup);
         dialog.show();
 
@@ -137,22 +130,19 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
         TextInputLayout buyPrice = dialog.findViewById(R.id.popup_crypto_buy_price);
         Button doneBtn = dialog.findViewById(R.id.popup_done);
         title.setText(String.format("Enter total buy value for %s",balance.getCurrencyName()));
-        doneBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String price = buyPrice.getEditText().getText().toString().trim();
-                if(price.isEmpty())
-                {
-                    buyPrice.setError("Enter price to proceed");
-                }
-                else
-                {
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(String.format("%s_buy_price",balance.getCurrency()),price);
-                    editor.apply();
-                    dialog.dismiss();
-                    notifyDataSetChanged();
-                }
+        doneBtn.setOnClickListener(v -> {
+            String price = buyPrice.getEditText().getText().toString().trim();
+            if(price.isEmpty())
+            {
+                buyPrice.setError("Enter price to proceed");
+            }
+            else
+            {
+                SharedPreferences.Editor editor = preferences.edit();
+                editor.putString(String.format("%s_buy_price",balance.getCurrency()),price);
+                editor.apply();
+                dialog.dismiss();
+                notifyDataSetChanged();
             }
         });
     }
@@ -181,11 +171,12 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
         progressDrawable.start();
 
         RequestBuilder<PictureDrawable> requestBuilder;
-        requestBuilder = Glide.with(context)
+        requestBuilder = GlideApp.with(context)
                 .as(PictureDrawable.class)
-                .placeholder(progressDrawable);
+                .placeholder(progressDrawable)
+                .error(R.drawable.generic);
 
-        requestBuilder.load(url).into(imageView).clearOnDetach();
+        requestBuilder.load(url).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).timeout(2000).into(imageView).clearOnDetach();
     }
 
 }
