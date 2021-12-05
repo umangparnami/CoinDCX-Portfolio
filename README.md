@@ -6,7 +6,7 @@ As there was no **Profit and Loss** feature available in the CoinDCX's app, so l
 also using **excel sheets** to determine the PnL. But while it did its job, the one thing it didn't have was **realtime price** updation.
 So I started working on a personal project using **CoinDCX's API** to build the **Profit and Loss** feature myself.
 
-You can download the APK and test the features yourself.
+You can [download](https://github.com/umangparnami/CoinDCX-Portfolio/releases/download/v1.0/CoinDCX_Portfolio.apk) the APK and test the features yourself.
 
 ### Requirements
 To view your portfolio, you just need the **API Key** and **Secret Key**. Paste both of these on the **Settings tab** in the app and you're set.
