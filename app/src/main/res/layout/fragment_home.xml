@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.HomeFragment"
-    android:background="@color/bg_color">
+    tools:context=".Fragments.HomeFragment">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/bg_color">
 
         <EditText
             android:id="@+id/search_field"
@@ -95,13 +100,13 @@
                     tools:text="Pairs fetched: 120" />
 
                 <TextView
-                    android:text="@string/sort_text"
-                    android:layout_centerVertical="true"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
                     android:layout_toStartOf="@id/sort_btn"
                     android:alpha="0.6"
                     android:fontFamily="@font/urbanist_medium"
+                    android:text="@string/sort_text"
                     android:textSize="12sp" />
 
                 <TextView
@@ -137,5 +142,6 @@
                 android:layout_below="@id/home_divider"
                 tools:listitem="@layout/ticker_item_layout" />
         </RelativeLayout>
+    </RelativeLayout>
 
-</RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

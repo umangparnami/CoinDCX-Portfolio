@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/refresh_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".Fragments.PortfolioFragment"
-    android:paddingHorizontal="10dp">
+    tools:context=".Fragments.PortfolioFragment">
+
+    <RelativeLayout
+        android:paddingHorizontal="10dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
     <TextView
         android:id="@+id/error_text"
@@ -96,6 +101,6 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/portfolio_total_layout"
             tools:listitem="@layout/portfolio_item_layout" />
+    </RelativeLayout>
 
-
-</RelativeLayout>
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

@@ -21,7 +21,7 @@
             android:layerType="software"
             android:minWidth="50dp"
             android:minHeight="50dp"
-            tools:src="@drawable/settings" />
+            tools:src="@drawable/generic" />
 
     <LinearLayout
         android:layout_centerVertical="true"

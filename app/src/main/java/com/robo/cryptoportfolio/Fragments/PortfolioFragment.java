@@ -1,10 +1,10 @@
 package com.robo.cryptoportfolio.Fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.ColorStateList;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +17,7 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.robo.cryptoportfolio.HelperClasses.ConvertBalanceToInr;
@@ -40,22 +41,19 @@ import retrofit2.Retrofit;
 import retrofit2.internal.EverythingIsNonNull;
 
 
-public class PortfolioFragment extends Fragment
+public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener
 {
 
     private View view;
     private SharedPreferences preferences;
     private static String api,secret;
-
-    RecyclerView portfolioRecycler;
-    PortfolioAdapter adapter;
+    private RecyclerView portfolioRecycler;
+    private PortfolioAdapter adapter;
     float portfolioSum = 0, buySum=0;
-    
-    TextView allBuyTotal,portfolioTotal,totalChange,errorText;
-    CardView portfolioTotalLayout;
-
-    private AlertDialog dialog;
-
+    private TextView allBuyTotal,portfolioTotal,totalChange,errorText;
+    private CardView portfolioTotalLayout;
+    private LinearLayoutManager layoutManager;
+    private SwipeRefreshLayout refreshLayout;
 
     public PortfolioFragment()
     {
@@ -81,13 +79,13 @@ public class PortfolioFragment extends Fragment
         portfolioTotal = view.findViewById(R.id.portfolio_total);
         totalChange = view.findViewById(R.id.total_change);
         portfolioTotalLayout = view.findViewById(R.id.portfolio_total_layout);
+        refreshLayout = view.findViewById(R.id.refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.orange,R.color.blue);
+        refreshLayout.setProgressViewOffset(false,0,230);
+        refreshLayout.setOnRefreshListener(this);
         portfolioTotalLayout.setVisibility(View.GONE);
         errorText = view.findViewById(R.id.error_text);
 
-        AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
-        builder.setView(R.layout.loading_dialog);
-        dialog = builder.create();
         return view;
     }
 
@@ -96,7 +94,7 @@ public class PortfolioFragment extends Fragment
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         checkPreferences();
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        layoutManager = new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         portfolioRecycler.setLayoutManager(layoutManager);
     }
 
@@ -122,7 +120,6 @@ public class PortfolioFragment extends Fragment
         Retrofit retrofit = new RetrofitClient().getInstance();
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
-        dialog.show();
 
         Call<List<MarketDetails>> marketCall = retrofitAPI.getMarketDetails();
         marketCall.enqueue(new Callback<List<MarketDetails>>() {
@@ -144,11 +141,13 @@ public class PortfolioFragment extends Fragment
         //Sending timestamp JSON as a body parameter
         Call<List<Balance>> call = retrofitAPI.getAllBalances(obj.getBody());
 
+        refreshLayout.setRefreshing(true);
         call.enqueue(new Callback<List<Balance>>() {
             @Override
             @EverythingIsNonNull
             public void onResponse(Call<List<Balance>> call, retrofit2.Response<List<Balance>> response)
             {
+                refreshLayout.setRefreshing(false);
                 if(response.body() == null)
                 {
                     errorText.setVisibility(View.VISIBLE);
@@ -180,13 +179,12 @@ public class PortfolioFragment extends Fragment
                     setPortfolioValues(buySum,portfolioSum);
                 }).start();
 
-                dialog.dismiss();
             }
 
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<List<Balance>> call, Throwable t) {
-                dialog.dismiss();
+                Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
                 Log.i("Response","Failure");
             }
         });
@@ -227,4 +225,12 @@ public class PortfolioFragment extends Fragment
         }
     }
 
+    @Override
+    public void onRefresh()
+    {
+        new Handler().postDelayed(()->{
+            layoutManager.smoothScrollToPosition(portfolioRecycler, null,0);
+            refreshLayout.setRefreshing(false);
+        },3000);
+    }
 }

@@ -1,8 +1,8 @@
 package com.robo.cryptoportfolio.Fragments;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
@@ -37,7 +38,7 @@ import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.internal.EverythingIsNonNull;
 
-public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeListener
+public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeListener, SwipeRefreshLayout.OnRefreshListener
 {
 
     private RecyclerView recyclerView;
@@ -48,8 +49,8 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
     private TickerAdapter adapter;
     private EditText search;
     private boolean sortByUp = true;
-    private AlertDialog dialog;
-
+    private SwipeRefreshLayout refreshLayout;
+    private LinearLayoutManager layoutManager;
 
     public HomeFragment() {
         // Required empty public constructor
@@ -72,10 +73,10 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
         cryptoChipGroup = view.findViewById(R.id.crypto_chip_group);
         pairsCount = view.findViewById(R.id.pairs_count);
         sortBtn = view.findViewById(R.id.sort_btn);
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
-        builder.setView(R.layout.loading_dialog);
-        dialog = builder.create();
+        refreshLayout = view.findViewById(R.id.refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.orange,R.color.blue);
+        refreshLayout.setProgressViewOffset(false,0,215);
+        refreshLayout.setOnRefreshListener(this);
 
         return view;
     }
@@ -85,7 +86,7 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        LinearLayoutManager layoutManager = new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false);
+        layoutManager = new LinearLayoutManager(view.getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.addItemDecoration(new DividerItemDecoration(view.getContext(), layoutManager.getOrientation()));
         cryptoChipGroup.setOnCheckedChangeListener(this);
@@ -138,8 +139,6 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
         Call<List<Ticker>> call = retrofitAPI.getAllTickers();
 
-        dialog.show();
-
         search.setText(null);
 
         call.enqueue(new Callback<List<Ticker>>() {
@@ -149,20 +148,18 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
             {
                 tickerList = response.body();
                 MainActivity.getActivity().setTicker(tickerList);
+                sortByUp = !sortByUp;
 
                 //Filtering list based on the ticker and displaying its info.
                 allTickersFiltered = tickerList.stream().filter(ticker -> ticker.getMarket().matches("[A-Z 0-9]+" + marketChoice)).collect(Collectors.toList());
                 adapter = new TickerAdapter(view.getContext(), allTickersFiltered, marketChoice);
                 recyclerView.setAdapter(adapter);
                 pairsCount.setText(String.format(Locale.US, "Pairs Fetched: %d", adapter.getItemCount()));
-
-                dialog.dismiss();
             }
 
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<List<Ticker>> call, Throwable t) {
-                dialog.dismiss();
                 Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
@@ -180,4 +177,13 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
             fetchData(getResources().getString(R.string.inr_ticker));
     }
 
+    @Override
+    public void onRefresh()
+    {
+        new Handler().postDelayed(()->{
+            layoutManager.smoothScrollToPosition(recyclerView,null,0);
+            onCheckedChanged(cryptoChipGroup,cryptoChipGroup.getCheckedChipId());
+            refreshLayout.setRefreshing(false);
+        },3000);
+    }
 }

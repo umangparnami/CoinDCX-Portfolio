@@ -1,9 +1,9 @@
 package com.robo.cryptoportfolio.Fragments;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -15,6 +15,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.textfield.TextInputLayout;
@@ -31,15 +32,18 @@ import retrofit2.Retrofit;
 import retrofit2.internal.EverythingIsNonNull;
 
 
-public class SettingsFragment extends Fragment {
+public class SettingsFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener
+{
 
     private View view;
     private SharedPreferences preferences;
     private TextInputLayout apiLayout,secretLayout;
     private Button doneBtn;
     private String api, secret;
-    private TextView name,mobile,email,linkText;
-    private AlertDialog dialog;
+    private TextView name;
+    private TextView mobile;
+    private TextView email;
+    private SwipeRefreshLayout refreshLayout;
 
     public SettingsFragment()
     {
@@ -65,14 +69,13 @@ public class SettingsFragment extends Fragment {
         name = view.findViewById(R.id.name);
         mobile = view.findViewById(R.id.mobile);
         email = view.findViewById(R.id.email);
-        linkText = view.findViewById(R.id.link_text);
+        refreshLayout = view.findViewById(R.id.refresh_layout);
+        refreshLayout.setColorSchemeResources(R.color.orange,R.color.blue);
+        refreshLayout.setProgressViewOffset(false,0,320);
+        refreshLayout.setOnRefreshListener(this);
+        TextView linkText = view.findViewById(R.id.link_text);
         linkText.setMovementMethod(LinkMovementMethod.getInstance());
         preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.shared_pref), Context.MODE_PRIVATE);
-
-        AlertDialog.Builder builder = new android.app.AlertDialog.Builder(getContext());
-        builder.setCancelable(false);
-        builder.setView(R.layout.loading_dialog);
-        dialog = builder.create();
 
         return view;
     }
@@ -136,7 +139,7 @@ public class SettingsFragment extends Fragment {
 
     private void getUserDetails()
     {
-        dialog.show();
+        refreshLayout.setRefreshing(true);
 
         SignatureGenerator obj = new SignatureGenerator();
         Retrofit retrofit = new RetrofitClient().getInstanceWithClient(obj.getSignature(secret),api);
@@ -148,7 +151,7 @@ public class SettingsFragment extends Fragment {
             @EverythingIsNonNull
             public void onResponse(Call<UserInfo> call, Response<UserInfo> response)
             {
-                dialog.dismiss();
+                refreshLayout.setRefreshing(false);
                 if(response.body() == null)
                 {
                     name.setText(getString(R.string.name));
@@ -166,9 +169,8 @@ public class SettingsFragment extends Fragment {
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<UserInfo> call, Throwable t) {
-                dialog.dismiss();
                 Log.i("Failure",t.getMessage());
-                Snackbar.make(view,"Something went wrong",Snackbar.LENGTH_SHORT).show();
+                Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
             }
         });
     }
@@ -181,5 +183,14 @@ public class SettingsFragment extends Fragment {
         editor.apply();
         Snackbar.make(view,"Keys saved.", Snackbar.LENGTH_SHORT).show();
         checkPreferences();
+    }
+
+    @Override
+    public void onRefresh()
+    {
+        new Handler().postDelayed(()->{
+            checkPreferences();
+            refreshLayout.setRefreshing(false);
+        },3000);
     }
 }
