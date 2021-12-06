@@ -13,7 +13,10 @@ To view your portfolio, you just need the **API Key** and **Secret Key**. Paste 
 
 >Note - If you don't have an **API Key** you can generate one from [here.](https://coindcx.com/api-dashboard)
 
-### Issue
+### App Screenshot
+![cdcx_app_portal](https://user-images.githubusercontent.com/79646572/144891503-1e9f256b-203c-4abd-b762-b8118d9a423a.png)
+
+### Having Issues
 If you find any issue or need some help, feel free to create an issue on GitHub and I will try to help you.
 
 ### Finding it helpful!
@@ -22,3 +25,5 @@ If you find this project helpful then you can give it a star.
 ### Copyrights or Trademarks
 Any likeness of any kind in the app similar to CoinDCX is unintentional.
 CoinDCX and its rights are a registered property of CoinDCX and I am in no way associated with them.
+
+You should not try to replicate or publish the content present on this git in anyway.
