@@ -19,6 +19,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.google.android.material.textfield.TextInputLayout;
@@ -174,9 +175,10 @@ public class PortfolioAdapter extends RecyclerView.Adapter<PortfolioViewHolder>
         requestBuilder = GlideApp.with(context)
                 .as(PictureDrawable.class)
                 .placeholder(progressDrawable)
-                .error(R.drawable.generic);
+                .error(R.drawable.generic)
+                .timeout(2000);
 
-        requestBuilder.load(url).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).timeout(2000).into(imageView).clearOnDetach();
+        requestBuilder.load(url).diskCacheStrategy(DiskCacheStrategy.DATA).priority(Priority.IMMEDIATE).into(imageView).clearOnDetach();
     }
 
 }

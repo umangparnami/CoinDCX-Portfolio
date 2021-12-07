@@ -22,9 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.snackbar.Snackbar;
 import com.robo.cryptoportfolio.HelperClasses.ConvertBalanceToInr;
 import com.robo.cryptoportfolio.HelperClasses.SignatureGenerator;
-import com.robo.cryptoportfolio.MainActivity;
 import com.robo.cryptoportfolio.Objects.Balance;
-import com.robo.cryptoportfolio.Objects.MarketDetails;
 import com.robo.cryptoportfolio.R;
 import com.robo.cryptoportfolio.RecyclerViews.PortfolioAdapter;
 import com.robo.cryptoportfolio.Retrofit.RetrofitAPI;
@@ -36,7 +34,6 @@ import java.util.stream.Collectors;
 
 import retrofit2.Call;
 import retrofit2.Callback;
-import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.internal.EverythingIsNonNull;
 
@@ -117,27 +114,10 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
     private void requestData()
     {
         SignatureGenerator obj = new SignatureGenerator();
-        Retrofit retrofit = new RetrofitClient().getInstance();
+        Retrofit retrofit = new RetrofitClient().getInstanceWithClient(obj.getSignature(secret),api);
         RetrofitAPI retrofitAPI = retrofit.create(RetrofitAPI.class);
 
 
-        Call<List<MarketDetails>> marketCall = retrofitAPI.getMarketDetails();
-        marketCall.enqueue(new Callback<List<MarketDetails>>() {
-            @Override
-            @EverythingIsNonNull
-            public void onResponse(Call<List<MarketDetails>> call, Response<List<MarketDetails>> response) {
-                MainActivity.getActivity().setMarketDetails(response.body());
-            }
-
-            @Override
-            @EverythingIsNonNull
-            public void onFailure(Call<List<MarketDetails>> call, Throwable t) {
-
-            }
-        });
-
-        retrofit = new RetrofitClient().getInstanceWithClient(obj.getSignature(secret),api);
-        retrofitAPI = retrofit.create(RetrofitAPI.class);
         //Sending timestamp JSON as a body parameter
         Call<List<Balance>> call = retrofitAPI.getAllBalances(obj.getBody());
 
@@ -147,24 +127,27 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             @EverythingIsNonNull
             public void onResponse(Call<List<Balance>> call, retrofit2.Response<List<Balance>> response)
             {
-                refreshLayout.setRefreshing(false);
+                buySum = portfolioSum = 0;
                 if(response.body() == null)
                 {
+                    refreshLayout.setRefreshing(false);
                     errorText.setVisibility(View.VISIBLE);
                     Snackbar.make(view,"API or Secret Key incorrect.",Snackbar.LENGTH_SHORT).show();
                     return;
                 }
 
-                errorText.setVisibility(View.GONE);
-                portfolioTotalLayout.setVisibility(View.VISIBLE);
+
                 List<Balance> availableBalances = response.body().stream().filter(balance -> Float.parseFloat(balance.getTotalBalance())>0)
                         .collect(Collectors.toList());
 
                 List<Balance> balanceInInr = ConvertBalanceToInr.getBalances(availableBalances);
                 adapter = new PortfolioAdapter(view.getContext(),balanceInInr);
                 portfolioRecycler.setAdapter(adapter);
+                refreshLayout.setRefreshing(false);
 
                 new Thread(() -> {
+                    errorText.setVisibility(View.GONE);
+                    portfolioTotalLayout.setVisibility(View.VISIBLE);
                     preferences = view.getContext().getSharedPreferences(getResources().getString(R.string.crypto_shared_pref), Context.MODE_PRIVATE);
                     for (Balance balance:balanceInInr)
                     {
@@ -184,6 +167,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<List<Balance>> call, Throwable t) {
+                refreshLayout.setRefreshing(false);
                 Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
                 Log.i("Response","Failure");
             }
@@ -230,6 +214,7 @@ public class PortfolioFragment extends Fragment implements SwipeRefreshLayout.On
     {
         new Handler().postDelayed(()->{
             layoutManager.smoothScrollToPosition(portfolioRecycler, null,0);
+            requestData();
             refreshLayout.setRefreshing(false);
         },3000);
     }

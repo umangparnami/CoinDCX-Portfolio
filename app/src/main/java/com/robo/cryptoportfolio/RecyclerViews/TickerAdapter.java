@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.CircularProgressDrawable;
 
+import com.bumptech.glide.Priority;
 import com.bumptech.glide.RequestBuilder;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.robo.cryptoportfolio.Objects.Ticker;
@@ -108,7 +109,6 @@ public class TickerAdapter extends RecyclerView.Adapter<TickerViewHolder> implem
         progressDrawable.setCenterRadius(40f);
         progressDrawable.start();
 
-
         RequestBuilder<PictureDrawable> requestBuilder;
         requestBuilder = GlideApp.with(context)
                 .as(PictureDrawable.class)
@@ -116,7 +116,14 @@ public class TickerAdapter extends RecyclerView.Adapter<TickerViewHolder> implem
                 .error(R.drawable.generic)
                 .timeout(2000);
 
-        requestBuilder.load(url).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).into(imageView).clearOnDetach();
+        requestBuilder.load(url).diskCacheStrategy(DiskCacheStrategy.DATA).priority(Priority.IMMEDIATE).into(imageView).clearOnDetach();
+    }
+
+    @Override
+    public void onViewRecycled(@NonNull TickerViewHolder holder) {
+        super.onViewRecycled(holder);
+        GlideApp.with(context).clear(holder.cryptoSymbol);
+        holder.cryptoSymbol.setImageResource(R.drawable.generic);
     }
 
     @Override

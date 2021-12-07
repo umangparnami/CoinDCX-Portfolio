@@ -22,6 +22,7 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import com.google.android.material.chip.ChipGroup;
 import com.google.android.material.snackbar.Snackbar;
 import com.robo.cryptoportfolio.MainActivity;
+import com.robo.cryptoportfolio.Objects.MarketDetails;
 import com.robo.cryptoportfolio.Objects.Ticker;
 import com.robo.cryptoportfolio.R;
 import com.robo.cryptoportfolio.RecyclerViews.TickerAdapter;
@@ -128,6 +129,7 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
                 sortBtn.setText(getString(R.string.UP));
                 sortBtn.setCompoundDrawablesWithIntrinsicBounds(R.drawable.arrow_upward,0,0,0);
             }
+            layoutManager.smoothScrollToPosition(recyclerView,null,0);
         });
     }
 
@@ -140,12 +142,14 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
         Call<List<Ticker>> call = retrofitAPI.getAllTickers();
 
         search.setText(null);
+        refreshLayout.setRefreshing(true);
 
         call.enqueue(new Callback<List<Ticker>>() {
             @EverythingIsNonNull
             @Override
             public void onResponse(Call<List<Ticker>> call, Response<List<Ticker>> response)
             {
+                refreshLayout.setRefreshing(false);
                 tickerList = response.body();
                 MainActivity.getActivity().setTicker(tickerList);
                 sortByUp = !sortByUp;
@@ -160,10 +164,28 @@ public class HomeFragment extends Fragment implements ChipGroup.OnCheckedChangeL
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<List<Ticker>> call, Throwable t) {
+                refreshLayout.setRefreshing(false);
                 Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
                 System.out.println(t.getMessage());
             }
         });
+
+        new Thread(()->{
+            Call<List<MarketDetails>> marketDetailsCall = retrofitAPI.getMarketDetails();
+            marketDetailsCall.enqueue(new Callback<List<MarketDetails>>() {
+                @EverythingIsNonNull
+                @Override
+                public void onResponse(Call<List<MarketDetails>> call, Response<List<MarketDetails>> response) {
+                    MainActivity.getActivity().setMarketDetails(response.body());
+                }
+                @EverythingIsNonNull
+                @Override
+                public void onFailure(Call<List<MarketDetails>> call, Throwable t)
+                {
+                    Snackbar.make(view,"Market Details not loaded",Snackbar.LENGTH_SHORT).show();
+                }
+            });
+        }).start();
 
     }
 

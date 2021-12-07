@@ -169,6 +169,7 @@ public class SettingsFragment extends Fragment implements SwipeRefreshLayout.OnR
             @Override
             @EverythingIsNonNull
             public void onFailure(Call<UserInfo> call, Throwable t) {
+                refreshLayout.setRefreshing(false);
                 Log.i("Failure",t.getMessage());
                 Snackbar.make(view,"Something went wrong...",Snackbar.LENGTH_SHORT).show();
             }
