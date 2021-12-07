@@ -13,6 +13,11 @@ To view your portfolio, you just need the **API Key** and **Secret Key**. Paste 
 
 >Note - If you don't have an **API Key** you can generate one from [here.](https://coindcx.com/api-dashboard)
 
+### Calculate PnL
+To view your **Profit and Loss** for all your crypto holdings you just need to enter the **total buy amount** of the crypto you want to calculate PnL for.
+This process can't be automated as their is no endpoint to get all the orders in CoinDCX's API.
+>**Eg:** You bought Bitcoin in two separate orders, one for **Rs 100** and another for **Rs 200** then enter the total buy amount which is **Rs 300** in the app to calculate PnL for it. If you have any sell orders for that crypto then you should subtract that amount from the total buy.
+
 ### App Screenshot
 ![cdcx_app_portal](https://user-images.githubusercontent.com/79646572/144891503-1e9f256b-203c-4abd-b762-b8118d9a423a.png)
 
